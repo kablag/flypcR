@@ -43,3 +43,13 @@ brain_step <- function(brain, observation) {
 brain_action <- function(brain) {
   brain$action
 }
+
+brain_protocol_step <- function(brain, task) {
+  group <- if (task$stage == "Добавление матрицы") "LC33" else "LT51"
+  stimulus <- make_visual_stimulus(brain, 1, group)
+  brain <- flywire_brain_step(brain, stimulus)
+  brain$mdn_output <- read_mdn(brain)
+  destination <- if ("target" %in% names(task)) task$target else task$destination
+  brain$action <- paste(task$stage, destination, sep = " → ")
+  brain
+}
